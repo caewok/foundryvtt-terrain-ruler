@@ -63,13 +63,12 @@ function hookFunctions() {
 		return originalEndMeasurementHandler.call(this)
 	}
 
-	const originalRulerHighlightMeasurement = Ruler.prototype._highlightMeasurement
-	Ruler.prototype._highlightMeasurement = function (ray) {
+	libWrapper.register("terrain-ruler", "libRuler.Segment.prototype.highlightMeasurement", function(wrapped, ray=this.ray) {
 		if (ray.terrainRulerVisitedSpaces)
 			highlightMeasurement.call(this, ray)
 		else
-			originalRulerHighlightMeasurement.call(this, ray)
-	}
+			wrapped(ray)
+	}, "MIXED");
 
 	const originalRulerToJSON = Ruler.prototype.toJSON
 	Ruler.prototype.toJSON = function () {
